@@ -7,17 +7,17 @@ Gem::Specification.new do |s|
   s.name     = "empathy"
   s.version  = Empathy::VERSION.dup
   s.date     = "2015-11-22"
-  s.summary  = "Empathy generates controller, models and view for your project"
+  s.summary  = "Empathy generates controllers, models and views for your project"
   s.email    = "damoon.rashidi@gmail.com"
-  s.homepage = "http://sfzombie.com"
+  s.homepage = "http://github.com/damoonrashidi/empathy"
   s.authors  = ['Damoon Rashidi']
   s.license  = "MIT"
   
-  s.description = "Create "
+  s.description = "Create stuff"
   
   dependencies = [
     # Examples:
-    # [:runtime,     "rack",  "~> 1.1"],
+    [:runtime,     "mysql2",  "~> 0.4.2"],
     # [:development, "rspec", "~> 2.1"],
   ]
   

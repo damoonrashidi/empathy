@@ -14,3 +14,5 @@ db :
     password : "supersecret"
     username : "root"
     database : "empathy.prod"
+
+latest_migration : 0

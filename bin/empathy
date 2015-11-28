@@ -4,9 +4,9 @@ require 'empathy/empathy'
 require 'fileutils'
 require 'optparse'
 require 'date'
+require 'mysql2'
 
 empathy = Empathy::Empathy.new
-config = YAML.load_file(File.join(File.dirname(__FILE__),"../lib/empathy.yaml"))
 
 class String
     def green
@@ -32,7 +32,7 @@ when 'new'
         Dir.mkdir "#{name}/#{dir}/"
     end
     File.write "#{name}/migrations/#{timestamp}_create_#{name}.sql","CREATE DATABASE IF NOT EXISTS #{name};"
-    File.write "#{name}/.empathy.yaml", "latest_migration: 0"
+    File.write "#{name}/.empathy.yaml", File.read("#{root}/lib/empathy/empathy.yaml")
     Dir.glob("#{name}/**/*").each do |entry|
         if !entry.include? "/" then
             puts entry.green
@@ -82,6 +82,14 @@ when 'delete','d','remove'
 when 'test'
 
 when 'migrate'
+    config = YAML.load_file(".empathy.yaml")
+    db = config['db']['development']
+    mysql = Mysql2::Client.new(:host => db['host'], :username => db['username'], :password => db['password'], :database => db['database'])
+    Dir['migrations/*.sql'].each do |file|
+        migration = File.read "#{file}"
+        mysql.query migration
+    end
+    
 
 when 'serve', 'server', 's'
     if !File.exist? "app.php"

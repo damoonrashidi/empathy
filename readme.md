@@ -5,6 +5,14 @@ Empathy is the little php framework that could! (Heavily) Inspired by Rails it's
 
 It gives you a full ORM, Routing, Migration and Templating solution as well as a CLI for the boring day to day tasks, an interactive console and development server (it's just the standard php one.. don't get excited).
 
+#Installation
+```sh
+gem build empathy.gemspec
+gem install empathy-0.0.1.gem
+```
+
+You will be able to just do `gem install empathy` as soon as this is pushed to rubygems
+
 ##Creating your first app
 ```sh
 empathy new my_app

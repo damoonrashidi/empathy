@@ -1,0 +1,16 @@
+db : 
+  development : 
+    host : "localhost"
+    password : ""
+    username : "root"
+    database : "empathy.dev"
+  testing :
+    host : "localhost"
+    password : "test"
+    username : "test"
+    database : "empathy.test"
+  production :
+    host : "localhost"
+    password : "supersecret"
+    username : "root"
+    database : "empathy.prod"

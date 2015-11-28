@@ -1,0 +1,99 @@
+#!/usr/bin/env ruby
+require 'yaml'
+require 'empathy/empathy'
+require 'fileutils'
+require 'optparse'
+require 'date'
+
+empathy = Empathy::Empathy.new
+config = YAML.load_file(File.join(File.dirname(__FILE__),"../lib/empathy.yaml"))
+
+class String
+    def green
+        return "\e[32m#{self}\e[0m"
+    end
+    def yellow
+        return "\e[33m#{self}\e[0m"
+    end
+    def blue
+        return "\e[36m#{self}\e[0m"
+    end
+end
+
+case ARGV[0]
+when 'new'
+    root = empathy.instance_variable_get(:@gem_root)
+    name = ARGV[1]
+    puts "-- Creating directory structure for new project #{name}"
+    timestamp = Time.now.strftime "%s"
+    FileUtils.cp_r(root+"/templates/.", name)
+    dirs = ['lib/vendor/','controllers','migrations', 'models', 'views','views/partials', 'views/layouts']
+    dirs.each do |dir|
+        Dir.mkdir "#{name}/#{dir}/"
+    end
+    File.write "#{name}/migrations/#{timestamp}_create_#{name}.sql","CREATE DATABASE IF NOT EXISTS #{name};"
+    File.write "#{name}/.empathy.yaml", "latest_migration: 0"
+    Dir.glob("#{name}/**/*").each do |entry|
+        if !entry.include? "/" then
+            puts entry.green
+        elsif entry.include? "/" and !entry.include? "." then
+            puts "  #{entry}".green
+        elsif entry.include? "/" and entry.include? "." then
+            puts "    #{entry}".yellow
+        end
+    end
+    puts " -- Next steps"
+    puts "> cd #{name}/".blue
+    puts "> npm install".blue
+    puts "> gulp".blue
+
+when 'generate','g'
+    type = ARGV[1]
+    name = ARGV[2]
+    actions = ARGV[3..ARGV.length]
+    case type
+    when 'controller','c'
+        if empathy.controller(name, actions)
+            puts "Wrote controller to #{name.capitalize}Controller.php"
+            puts "Wrote template files to views/#{name}"
+        else
+            puts "Unable to generate controller. It probably already exists?"
+        end
+
+    when 'model','m'
+        if empathy.model(name, actions)
+            puts "Wrote model to models/#{name.capitalize}.php"
+        else
+            puts "Unable to create model. It probably already exists?"
+        end
+    end
+        
+
+when 'delete','d','remove'
+    type = ARGV[1]
+    name = ARGV[2]
+    case type
+    when 'model','m'
+        empathy.remove 'model',name
+    when 'controller','c'
+        empathy.remove 'controller',name
+    end
+
+when 'test'
+
+when 'migrate'
+
+when 'serve', 'server', 's'
+    if !File.exist? "app.php"
+        puts "This doesn't seem to be an empathy app. You can create one with empathy new my_app"
+    else
+        port = ARGV.length == 2 ? ARGV[1] : 1338
+        system "php -S localhost:#{port} app.php"
+    end
+
+when 'console', 'c'
+    system "php -d auto_prepend_file=lib/loader.php  -a"
+
+else
+    puts "Invalid option"
+end

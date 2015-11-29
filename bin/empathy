@@ -31,7 +31,6 @@ when 'new'
     dirs.each do |dir|
         Dir.mkdir "#{name}/#{dir}/"
     end
-    File.write "#{name}/migrations/#{timestamp}_create_#{name}.sql","CREATE DATABASE IF NOT EXISTS #{name};"
     File.write "#{name}/.empathy.yaml", File.read("#{root}/lib/empathy/empathy.yaml")
     Dir.glob("#{name}/**/*").each do |entry|
         if !entry.include? "/" then
@@ -84,10 +83,15 @@ when 'test'
 when 'migrate'
     config = YAML.load_file(".empathy.yaml")
     db = config['db']['development']
-    mysql = Mysql2::Client.new(:host => db['host'], :username => db['username'], :password => db['password'], :database => db['database'])
+    client = Mysql2::Client.new(:host => db['host'], :username => db['username'], :password => db['password'])
+    begin 
+        client.select_db(db['database'])
+    rescue Mysql2::Error
+        client.query "CREATE DATABASE IF NOT EXISTS #{db['database']}"
+    end
     Dir['migrations/*.sql'].each do |file|
         migration = File.read "#{file}"
-        mysql.query migration
+        client.query migration
     end
     
 

@@ -4,19 +4,19 @@
       'host' => 'localhost',
       'user' => 'root',
       'password' => '',
-      'database' => 'v2'
+      'database' => 'dev'
     ],
     'test' => [
       'host' => 'localhost',
       'user' => 'root',
       'password' => '',
-      'database' => 'v2test'
+      'database' => 'test'
     ],
     'prod' => [
       'host' => 'localhost',
       'user' => 'root',
-      'password' => '',
-      'database' => 'v2prod'
+      'password' => 'supersecret',
+      'database' => 'prod'
     ]
   ];
   $env = "dev";

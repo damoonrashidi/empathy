@@ -3,7 +3,7 @@
   #
   # $router->index = function() {
   #   echo "Hello World!";
-  # }
+  # };
   #
   # $router->get('home', function(){
   #   echo "Welcome!";

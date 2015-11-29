@@ -20,12 +20,12 @@
 			include __DIR__."/../views/_partials/".$name.".html";
 		}
 
-		function render($view = ""){
+		function render_layout($view = ""){
 			$this->view = $view;
 			include __DIR__."/../views/layouts/".$this->layout.".html";
 		}
 
-		function view(){
+		function render_view(){
 			if(strlen($this->view) > 0) {
 				$ctrl = explode("#",$this->view)[0];
 				$view = explode("#",$this->view)[1];

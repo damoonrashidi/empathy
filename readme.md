@@ -38,6 +38,9 @@ Having your app do something when someone goes to a URL is a good start. Let's b
 Pretty simple. When there is a `GET` request that matches `home/` run the function provided. This is the most basic usage. But we can do some more fun stuff if we add a route that goes to a controller method. Add the following lines before the the router is run;
 
 ```php
+$router->index = function(){
+  echo "Hello, this is my new app";
+}
 $router->get('user/all', 'user#all');
 $router->get('user/:id', 'user#profile');
 ```

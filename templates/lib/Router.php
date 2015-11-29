@@ -4,6 +4,7 @@
 
 
     function __construct(){
+      $this->index = null;
       $this->get = [];
       $this->post = [];
       $this->put = [];
@@ -28,9 +29,32 @@
       $this->delete[$url] = $controller;
     }
 
+    function parse_params($url) {
+      return [];
+    }
+
     function run() {
       $routes = ["GET" => $this->get, "POST" => $this->post, "DELETE" => $this->delete, "PUT" => $this->put][$this->method];
       $url = substr($this->uri, 1);
+      //this is the index. do the index action
+      if($url == "" && $this->index != null){
+        if(is_callable($this->index)) {
+          $fn = $this->index;
+          $fn();
+          return;
+        }
+        else {
+          $controller = ucfirst(explode("#",$this->index)[0])."Controller";
+          $action = explode("#",$this->index)[1];
+          require __DIR__."/../controllers/".$controller.".php";
+          $params = $this->parse_params($url);
+          $controller = new $controller;
+          $controller->__before($params, $action);
+          $controller->$action($params);
+          $controller->__after($params, $action);
+          return;
+        }
+      }
       //we straight up matched a route, check to see if its callable or if it's a controller
       if(isset($routes[$url])) {
         if(is_callable($routes[$url])) {
@@ -41,7 +65,11 @@
           $action = explode("#",$routes[$url])[1];
           require __DIR__."/../controllers/".$controller.".php";
           $controller = new $controller;
-          $controller->$action([]);
+          $params = $this->parse_params($routes[$url]);
+          $controller->__before($params, $action);
+          $controller->$action($params);
+          $controller->__after($params, $action);
+          return;
         }
       }
       else {
@@ -60,7 +88,7 @@
                 $params[substr($route[$i],1,strlen($route[$i])-1)] = $url[$i];
               }
               if($i == count($route)-1 && $match) {
-                if($type == "POST") {
+                if($this->method == "POST") {
                   $params = array_merge($params, json_code(file_get_contents("php://input")), true);
                 }
                 $action = explode("#",$controller)[1];

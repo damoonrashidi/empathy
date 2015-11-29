@@ -1,6 +1,10 @@
 <?php
   $router = new Router();
   #
+  # $router->index = function() {
+  #   echo "Hello World!";
+  # }
+  #
   # $router->get('home', function(){
   #   echo "Welcome!";
   # });

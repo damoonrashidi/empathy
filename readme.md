@@ -90,7 +90,11 @@ $user->save();
 You can retrieve it again with
 
 ```php
-echo json_encode(User::where(['email' => 'tester@mctest.com'])->first());
+echo User::where(['email' => 'tester@mctest.com'])->first()->json();
+```
+or 
+```php
+echo User::find(1)->json();
 ```
 
 That's it! You've done it! If you refresh the browser now, you should see Test McTesty listed in the user list.

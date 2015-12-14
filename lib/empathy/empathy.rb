@@ -29,23 +29,28 @@ module Empathy
     end
 
     def model(name, fields)
-      puts fields.inspect
       filename = "#{name.capitalize}.php"
-      fields.unshift 'modified_at:datetime' if !fields.include? 'modified_at:datetime'
-      fields.unshift 'created_at:datetime' if !fields.include? 'created_at:datetime'
-      fields.unshift 'id:int:key' if !fields.include? 'id:int:key'
       if File.exist? "models/#{filename}" then
         puts "Model already exists. Exiting"
         return false
       end
+      references = fields.select{|f| f.include? 'references'}
+      
+      fields.unshift 'modified_at:datetime' if !fields.include? 'modified_at:datetime'
+      fields.unshift 'created_at:datetime' if !fields.include? 'created_at:datetime'
+      fields.unshift 'id:int:key' if !fields.include? 'id:int:key'
+      
       template = File.read "#{@gem_root}/lib/empathy/model.php"
       template.gsub! "%NAME%", name.capitalize
-      template.sub! "%TABLE%", "\"#{name}\""
+      template.gsub! "%TABLE%", "\"#{name}\""
+            
       attributes = fields.map{|f| f.split(':')[0]}
       template.gsub! "%FIELDS%", attributes.map{|f| "'#{f}'"}.join(', ')
-      template.gsub! "%THIS%", attributes.map{|f| "      $this->#{f} = $data['#{f}'];\n"}.join('')
+      template.gsub! "%THIS%", attributes.map{|f| 
+        "      $this->#{f} = $data['#{f}'];\n"
+      }.join('')
       File.write("models/#{filename}", template)
-
+      
       sql = "CREATE TABLE IF NOT EXISTS #{name} (\n"
       fields.each do |f|
         f = f.split ':'

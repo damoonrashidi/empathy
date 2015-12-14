@@ -14,7 +14,10 @@
 			$this->modified_at = date("Y-m-d H:i:s");
 			$rows = $ar->listify(array_keys($ar->without($this,['id'])));
 			$values = $ar->listify(array_values($ar->without($this, ['id'])), "'");
-			$create = $GLOBALS['MYSQL']->query("INSERT INTO ".static::$table." ($rows) VALUES($values)");
+			$q = "INSERT INTO ".static::$table." ($rows) VALUES($values)";
+			$create = $GLOBALS['MYSQL']->query($q);
+			error_log("QUERY: $q");
+			error_log($GLOBALS['MYSQL']->info);
 			if($create !== false)
 				return $GLOBALS['MYSQL']->insert_id;
 			else return false;
@@ -31,7 +34,10 @@
 		static function where($data){
 			$set = [];
 			$data = ArrayManip::chain($data, "AND");
-			$result = $GLOBALS['MYSQL']->query("SELECT * FROM ".static::$table." WHERE ".$data);
+			$q = "SELECT * FROM ".static::$table." WHERE ".$data;
+			$result = $GLOBALS['MYSQL']->query($q);
+			error_log("RAN QUERY: ".$q);
+			error_log($GLOBALS['MYSQL']->info());
 			while($row = $result->fetch_assoc()){
 				array_push($set, new static($row));
 			}
@@ -49,7 +55,10 @@
 		static function find($id){
 			if(!is_numeric($id)) return null;
 			$set = [];
-			$results = $GLOBALS['MYSQL']->query("SELECT * FROM ".static::$table." WHERE id = $id");
+			$q = "SELECT * FROM ".static::$table." WHERE id = $id";
+			$results = $GLOBALS['MYSQL']->query($q);
+			error_log("QUERY: $q");
+			error_log($GLOBALS['MYSQL']->info);
 			if($results->num_rows == 0) return null;
 			return new static($results->fetch_assoc());
 		}
@@ -65,7 +74,10 @@
 		static function wildcard($data){
 			$set = [];
 			$data = ArrayManip::wildcard($data, '%', '%', 'OR');
-			$result = $GLOBALS['MYSQL']->query("SELECT * FROM ".static::$table." WHERE ".$data);
+			$q = "SELECT * FROM ".static::$table." WHERE ".$data;
+			$result = $GLOBALS['MYSQL']->query($q);
+			error_log("QUERY: $q");
+			error_log($GLOBALS['MYSQL']->info);
 			while($row = $result->fetch_assoc()){
 				array_push($set, new static($row));
 			}
@@ -86,7 +98,10 @@
 			$offset = (isset($parameters['offset'])) ? "OFFSET ".$parameters['offset'] : '';
 			$parameters['data'] = ArrayManip::listify($parameters['data']);
 			$parameters['direction'] = (isset($parameters['limit'])) ? $parameters['direction'] : 'ASC';
-			$result = $GLOBALS['MYSQL']->query("SELECT * FROM ".static::$table." ORDER BY ".$parameters['data']." ".$parameters['direction']." $limit $offset");
+			$q = "SELECT * FROM ".static::$table." ORDER BY ".$parameters['data']." ".$parameters['direction']." $limit $offset";
+			$result = $GLOBALS['MYSQL']->query();
+			error_log("QUERY: $q");
+			error_log($GLOBALS['MYSQL']->info);
 			$set = [];
 			while($row = $result->fetch_assoc()){
 				array_push($set, new static($row));
@@ -97,16 +112,22 @@
 		function update(){
 			$this->modified_at = date("Y-m-d H:i:s");
 			$data = ArrayManip::chain($this, ", ");
-			$update = $GLOBALS['MYSQL']->query("UPDATE ".static::$table." SET ".$data." WHERE id = ".$this->id);
+			$q = "UPDATE ".static::$table." SET ".$data." WHERE id = ".$this->id;
+			$update = $GLOBALS['MYSQL']->query($q);
+			error_log("QUERY: $q");
+			error_log($GLOBALS['MYSQL']->info);
 			return $update !== false;
 		}
 
 		static function all(){
 			$set = [];
-			$result = $GLOBALS['MYSQL']->query("SELECT * FROM ".static::$table);
+			$q = "SELECT * FROM ".static::$table;
+			$result = $GLOBALS['MYSQL']->query($q);
 			while($row = $result->fetch_assoc()){
 				array_push($set, new static($row));
 			}
+			error_log("QUERY: $q");
+			error_log($GLOBALS['MYSQL']->info);
 			return new Resource($set);
 		}
 
@@ -115,9 +136,6 @@
 			return $delete !== false;
 		}
 
-		function json(){
-			return json_encode($this);
-		}
 
 	}
 

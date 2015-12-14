@@ -104,7 +104,8 @@ when 'serve', 'server', 's'
     end
 
 when 'console', 'c'
-    system "php -d auto_prepend_file=lib/loader.php  -a"
+    system "psysh lib/loader.php"
+    # system "php -d auto_prepend_file=lib/loader.php -a"
 
 else
     puts "Invalid option"

@@ -20,7 +20,7 @@ DIR =
     OUT : 'public/css/'
 
 gulp.task 'sass', ->
-  sass DIR.CSS.IN+"app.sass", style: "compressed"
+  sass DIR.CSS.IN+"*.sass", style: "compressed"
     .pipe prefix browsers: ['last 2 versions']
     .pipe minifyCSS compatibility: 'ie8'
     .pipe chmod 644
@@ -37,9 +37,8 @@ gulp.task 'coffee', ->
 
 
 gulp.task 'serve', ->
-  browsersync.init server: 
-    proxy: 'localhost:1338'
-  gulp.watch [DIR.CSS.IN+"app.sass", DIR.CSS.IN+"**/*.sass"], ['sass']
+  browsersync.init {server: {proxy: 'http://localhost:1338'}}
+  gulp.watch [DIR.CSS.IN+"*.sass", DIR.CSS.IN+"**/*.sass"], ['sass']
   gulp.watch [DIR.JS.APP, DIR.JS.DIRECTIVES], ['coffee']
   gulp.watch("*.html").on('change', browsersync.reload)
   return

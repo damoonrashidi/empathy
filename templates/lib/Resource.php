@@ -51,6 +51,26 @@
       return json_encode($this->bucket);
     }
 
+    //sort this bucket according to the predicate
+    function order($predicate) {
+      $res = [];
+      for($i = 0, $count = count($this->bucket); $i < $count; $i++) {
+        $min = $i;
+        for($j = 0; $j < $count; $j++) {
+          if($this->bucket[$j]->$predicate < $this->bucket[$min]->$predicate) {
+            $min = $j;
+          }
+        }
+        $res[] = $this->bucket[$min];
+      }
+      return new Resource($res);
+    }
+
+    //reverse the current bucket
+    function reverse() {
+      return new Resource(array_reverse($this->bucket));
+    }
+
   }
 
 ?>

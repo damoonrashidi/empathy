@@ -8,7 +8,10 @@
       'js'  => 'application/javascript',
       'png' => 'image/png',
       'jpg' => 'image/jpeg',
-      'gif' => 'image/gif'
+      'gif' => 'image/gif',
+      'webp' => 'image/webp',
+      'webm' => 'image/webm',
+      'pdf' => 'application/pdf'
     ];
     $ext = explode(".", $res)[1];
     header("Content-Type: ".$mimes[$ext]);

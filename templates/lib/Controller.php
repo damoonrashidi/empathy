@@ -17,7 +17,7 @@
 		}
 
 		function partial($name){
-			include __DIR__."/../views/_partials/".$name.".html";
+			include __DIR__."/../views/partials/".$name.".html";
 		}
 
 		function render_layout($view = ""){

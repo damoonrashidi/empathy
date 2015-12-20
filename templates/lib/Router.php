@@ -104,7 +104,7 @@
           }
         }
         //redirect to 404 if there is 404, otherwise output standard 404
-        header("HTTP/1.0 404 Not Found");
+        header("HTTP/2.0 404 Not Found");
         echo "<h1>404!</h1><p>Sorry, We couldn't get this resource for you</p>";
       }
     }

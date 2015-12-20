@@ -4,27 +4,27 @@
       'host' => 'localhost',
       'user' => 'root',
       'password' => '',
-      'database' => 'dev'
+      'database' => 'empathy'
     ],
     'test' => [
       'host' => 'localhost',
       'user' => 'root',
       'password' => '',
-      'database' => 'test'
+      'database' => 'empathy_test'
     ],
     'prod' => [
       'host' => 'localhost',
       'user' => 'root',
       'password' => 'supersecret',
-      'database' => 'prod'
+      'database' => 'empathy_prod'
     ]
   ];
   $env = "dev";
-  $MYSQL = mysqli_connect(
-    $GLOBALS["DB"][$env]["host"],
-    $GLOBALS["DB"][$env]["user"],
-    $GLOBALS["DB"][$env]["password"],
-    $GLOBALS["DB"][$env]["database"]
+  $GLOBALS["MYSQL"] = mysqli_connect(
+    $DB[$env]["host"],
+    $DB[$env]["user"],
+    $DB[$env]["password"],
+    $DB[$env]["database"]
   ) or die ("Error establishing a connection to the database");
 
 ?>

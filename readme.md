@@ -8,7 +8,7 @@ It gives you a full ORM, Routing, Migration and Templating solution as well as a
 #Installation
 ```sh
 gem build empathy.gemspec
-gem install empathy-0.0.1.gem
+gem install empathy-0.2.0.gem
 ```
 
 You will be able to just do `gem install empathy` as soon as this is pushed to rubygems

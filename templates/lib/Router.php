@@ -91,6 +91,10 @@
                 if($this->method == "POST") {
                   $params = array_merge($params, json_code(file_get_contents("php://input")), true);
                 }
+                if(is_callable($controller)){
+                  $controller($params);
+                  return;
+                }
                 $action = explode("#",$controller)[1];
                 $controller = ucfirst(explode("#",$controller)[0])."Controller";
                 require __DIR__."/../controllers/".$controller.".php";

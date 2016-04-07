@@ -80,6 +80,14 @@ when 'delete','d','remove'
 
 when 'test'
 
+when 'seed'
+    config = YAML.load_file(".empathy.yaml")
+    db = config['db']['development']
+    client = Mysql2::Client.new(:host => db['host'], :username => db['username'], :password => db['password'])
+    client.select_db(db['database'])
+    seed = File.read 'migrations/seed.sql'
+    client.query seed
+
 when 'migrate'
     config = YAML.load_file(".empathy.yaml")
     db = config['db']['development']
@@ -91,8 +99,11 @@ when 'migrate'
     end
     Dir['migrations/*.sql'].each do |file|
         migration = File.read "#{file}"
-        client.query migration
+        client.query migration if file != "seed.sql"
     end
+
+when 'version','v'
+    puts "Empathy Version: #{Empathy::VERSION.dup}"
     
 
 when 'serve', 'server', 's'

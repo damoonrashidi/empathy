@@ -1,6 +1,6 @@
 module Empathy
   
-  VERSION = '0.0.1'
+  VERSION = '0.2.0'
 
   class Empathy
 
@@ -88,7 +88,7 @@ module Empathy
         end
         if Dir.exist? "views/#{name}"
           FileUtils.rm_r "views/#{name}"
-          puts "Delted views for #{name} as well"
+          puts "Deleted views for #{name} as well"
         end
       end
     end

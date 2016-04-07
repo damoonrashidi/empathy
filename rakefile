@@ -1,8 +1,13 @@
+# require 'empathy/empathy'
+module Empathy
+  VERSION = "0.2.0"
+end
+
 task :build do
-    if File.exist? "empathy-0.0.1.gem"
+    if File.exist? "empathy-#{Empathy::VERSION.dup}.gem"
         puts "  Removing old gemfile"
-        File.delete "empathy-0.0.1.gem"
+        File.delete "empathy-#{Empathy::VERSION.dup}.gem"
     end
     system "gem build empathy.gemspec"
-    system "gem install empathy-0.0.1.gem"
+    system "gem install empathy-#{Empathy::VERSION.dup}.gem"
 end

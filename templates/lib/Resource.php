@@ -33,9 +33,15 @@
     //PRE: none
     //POST: Resoruce with all items from this bucket but with $fn applied to them
     function map($fn) {
-      for($i = 0; $i < count($this->bucket); $i++) {
+      $len = count($this->bucket);
+      for($i = 0; $i < $len; $i++) {
         $this->bucket[$i] = $fn($this->bucket[$i]);
       }
+      return $this;
+    }
+
+    function reduce($fn) {
+      $this->bucket = call_user_func($fn,$this->bucket);
       return $this;
     }
 
@@ -69,6 +75,10 @@
     //reverse the current bucket
     function reverse() {
       return new Resource(array_reverse($this->bucket));
+    }
+
+    function to_array() {
+      return $this->bucket;
     }
 
   }

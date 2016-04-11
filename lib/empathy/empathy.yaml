@@ -3,16 +3,14 @@ db :
     host : "localhost"
     password : ""
     username : "root"
-    database : "empathy.dev"
+    database : "empathy_dev"
   testing :
     host : "localhost"
     password : "test"
     username : "test"
-    database : "empathy.test"
+    database : "empathy_test"
   production :
     host : "localhost"
     password : "supersecret"
     username : "root"
-    database : "empathy.prod"
-
-latest_migration : 0
+    database : "empathy_prod"

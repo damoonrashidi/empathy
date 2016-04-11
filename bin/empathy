@@ -81,12 +81,17 @@ when 'delete','d','remove'
 when 'test'
 
 when 'seed'
-    config = YAML.load_file(".empathy.yaml")
-    db = config['db']['development']
-    client = Mysql2::Client.new(:host => db['host'], :username => db['username'], :password => db['password'])
-    client.select_db(db['database'])
-    seed = File.read 'migrations/seed.sql'
-    client.query seed
+    table = ARGV[1]
+    if ARGV.length == 1 || !File.exist?("migrations/seed_#{table}.sql")
+        puts "invalid seed file"
+    else
+        config = YAML.load_file(".empathy.yaml")
+        db = config['db']['development']
+        client = Mysql2::Client.new(:host => db['host'], :username => db['username'], :password => db['password'])
+        client.select_db(db['database'])
+        seed = File.read "migrations/seed_#{table}.sql"
+        client.query seed
+    end
 
 when 'migrate'
     config = YAML.load_file(".empathy.yaml")
@@ -99,7 +104,7 @@ when 'migrate'
     end
     Dir['migrations/*.sql'].each do |file|
         migration = File.read "#{file}"
-        client.query migration if file != "seed.sql"
+        client.query migration if (file =~ /seed\_/).nil?
     end
 
 when 'version','v'

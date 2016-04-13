@@ -8,10 +8,14 @@
       'js'  => 'application/javascript',
       'png' => 'image/png',
       'jpg' => 'image/jpeg',
+      'jpeg' => 'image/jpeg',
       'gif' => 'image/gif',
+      'bmp' => 'image/bmp',
       'webp' => 'image/webp',
       'webm' => 'image/webm',
-      'pdf' => 'application/pdf'
+      'pdf' => 'application/pdf',
+      'html' => 'text/html',
+      'svg' => 'image/svg+xml'
     ];
     $ext = explode(".", $res)[1];
     header("Content-Type: ".$mimes[$ext]);
@@ -22,6 +26,5 @@
   ob_start();
   ob_clean();
   
-  include getenv("DOCUMENT_ROOT")."lib/loader.php";
-  include getenv("DOCUMENT_ROOT")."config/routes.config.php";
-?>
+  require_once "lib/loader.php";
+  require_once "config/routes.config.php";

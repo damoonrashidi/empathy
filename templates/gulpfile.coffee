@@ -3,11 +3,8 @@ sass   = require 'gulp-ruby-sass'
 chmod  = require 'gulp-chmod'
 prefix = require 'gulp-autoprefixer'
 concat = require 'gulp-concat'
-uglify = require 'gulp-uglify'
+minifyCSS = require 'gulp-minify-css'
 browsersync = require('browser-sync').create()
-minifyHTML  = require 'gulp-minify-html'
-minifyCSS   = require 'gulp-minify-css'
-minifyJS    = require 'gulp-uglify'
 gulp        = require 'gulp'
 
 #pretty straight forward, edit as necessary
@@ -28,6 +25,7 @@ gulp.task 'sass', ->
     .pipe browsersync.stream()
 
 gulp.task 'coffee', ->
+
   gulp.src DIR.JS.APP
     .pipe coffee bare: true
     .pipe concat "app.js"
@@ -35,11 +33,10 @@ gulp.task 'coffee', ->
     .pipe gulp.dest DIR.JS.OUT
     .pipe browsersync.stream()
 
-
 gulp.task 'serve', ->
   browsersync.init {server: {proxy: 'http://localhost:1338'}}
   gulp.watch [DIR.CSS.IN+"*.sass", DIR.CSS.IN+"**/*.sass"], ['sass']
-  gulp.watch [DIR.JS.APP, DIR.JS.DIRECTIVES], ['coffee']
+  gulp.watch [DIR.JS.APP], ['coffee']
   gulp.watch("*.html").on('change', browsersync.reload)
   return
 

@@ -7,7 +7,11 @@
       $this->bucket = $bucket;
     }
 
-    //return the last $n items in $bucket as a new bucket unless $n is 1 then return that item
+    /**
+     * last int -> Resource
+     * @param  integer $n - amount of items to limit bucket to (default 1)
+     * @return Resource - the last $n items in this bucket]
+     */
     function last($n = 1) {
       if($n == 1)
         return $this->bucket[count($this->bucket)-1];
@@ -17,7 +21,11 @@
         return new Resource(array_slice($this->bucket), -$n, count($this->bucket)-1);
     }
 
-    //return the first $n items in $bucket as a new bucket unless $n is 1 then return that item
+    /**
+     * first int -> Resour
+     * @param  integer $n amount of items to fetch (default 1)
+     * @return Resource - The first $n items in this bucket as a Resource
+     */
     function first($n = 1){
       if($n == 1)
         return $this->bucket[0];
@@ -26,12 +34,12 @@
       else
         return new Resource(array_slice($this->bucket), 0, $n);
     }
-
-
-    //FUNCTION: map: fn -> Resource
-    //DESCRIPTION
-    //PRE: none
-    //POST: Resoruce with all items from this bucket but with $fn applied to them
+    
+    /**
+     * map fn -> Resource
+     * @param  function $fn function to apply to items
+     * @return Resource - Resource with all items in this bucket but with $fn applied to them
+     */
     function map($fn) {
       $len = count($this->bucket);
       for($i = 0; $i < $len; $i++) {
@@ -40,24 +48,39 @@
       return $this;
     }
 
+    /**
+     * reduce fn -> Resource
+     * @param  function $fn - function to apply on this bucket to reduce it to a single value
+     * @return [type]     [description]
+     */
     function reduce($fn) {
-      $this->bucket = call_user_func($fn,$this->bucket);
-      return $this;
+      return call_user_func($fn,$this->bucket);
     }
 
-    //iterates over all elements in the bucket and calls a function on each item
+    /**
+     * each fn -> ()
+     * @param  Function $fn function to run for each item in this bucket
+     * @return ()
+     */
     function each($fn) {
       for ($i=0; $i < count($this->bucket); $i++) { 
         $fn($this->bucket[$i]);
       }
     }
 
-    //convert the current bucket to a json string
+    /**
+     * json () -> String
+     * @return String the items in this bucket as json
+     */
     function json() {
       return json_encode($this->bucket);
     }
 
-    //sort this bucket according to the predicate
+    /**
+     * order Class->$property -> Resource
+     * @param  Class->$property $predicate property to sort this bucket by
+     * @return Resource - this bucket but with the items ordered by $predicate
+     */
     function order($predicate) {
       $res = [];
       for($i = 0, $count = count($this->bucket); $i < $count; $i++) {
@@ -72,13 +95,37 @@
       return new Resource($res);
     }
 
-    //reverse the current bucket
+    /**
+     * reverse () -> Resource
+     * @return Resource this bucket reversed
+     */
     function reverse() {
       return new Resource(array_reverse($this->bucket));
     }
 
+    /**
+     * to_array () -> Array
+     * @return array - returns this bucket as array
+     */
     function to_array() {
       return $this->bucket;
+    }
+
+
+    /**
+     * filter: fn -> Resource
+     * all items in bucket where $fn($item) == true
+     * @param  lambda $fn [description]
+     * @return Resource     [description]
+     */
+    function filter($fn) {
+      $matched = [];
+      for($i = 0, $count = count($this->bucket); $i < $count; $i++) {
+        if ($fn($this->bucket[$i])) {
+          $matched[] = $this->bucket[$i];
+        }
+      }
+      return new Resource($matched);
     }
 
   }

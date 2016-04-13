@@ -3,7 +3,6 @@
   "email" : "me@mail.com",
   "description" : "package description",
   "dependencies" : {
-
   },
   "devDependencies" : {
     "coffee-script": "latest",

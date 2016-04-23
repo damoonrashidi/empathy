@@ -2,10 +2,11 @@
 
   $res = substr($_SERVER['REQUEST_URI'],1);
 
-  if(file_exists($res)){
+  if (file_exists($res)) {
     $mimes = [
       'css' => 'text/css',
       'js'  => 'application/javascript',
+      'map'  => 'application/javascript',
       'png' => 'image/png',
       'jpg' => 'image/jpeg',
       'jpeg' => 'image/jpeg',
@@ -17,8 +18,8 @@
       'html' => 'text/html',
       'svg' => 'image/svg+xml'
     ];
-    $ext = explode(".", $res)[1];
-    header("Content-Type: ".$mimes[$ext]);
+    $ext = explode(".", $res)[count(explode(".", $res))-1];
+    header("Content-Type: ".(isset($mimes[$ext]) ? $mimes[$ext] : $mimes['html']));
     echo file_get_contents($res);
     exit;
   }

@@ -25,13 +25,11 @@ when 'new'
     root = empathy.instance_variable_get(:@gem_root)
     name = ARGV[1]
     puts "-- Creating directory structure for new project #{name}"
-    timestamp = Time.now.strftime "%s"
     FileUtils.cp_r(root+"/templates/.", name)
-    dirs = ['lib/vendor/','controllers','migrations', 'models', 'views','views/partials', 'views/layouts']
+    dirs = ['controllers','migrations', 'models', 'views','views/partials', 'views/layouts']
     dirs.each do |dir|
-        Dir.mkdir "#{name}/#{dir}/"
+        Dir.mkdir "./#{name}/#{dir}/"
     end
-    File.write "#{name}/.empathy.yaml", File.read("#{root}/lib/empathy/empathy.yaml")
     Dir.glob("#{name}/**/*").each do |entry|
         if !entry.include? "/" then
             puts entry.green
@@ -41,6 +39,7 @@ when 'new'
             puts "    #{entry}".yellow
         end
     end
+    File.write "#{name}/.empathy.yaml", File.read("#{root}lib/empathy/empathy.yaml")
     puts " -- Next steps"
     puts "> cd #{name}/".blue
     puts "> npm install".blue

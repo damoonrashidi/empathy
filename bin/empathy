@@ -108,7 +108,7 @@ when 'migrate'
     end
 
 when 'version','v'
-    puts "Empathy Version: #{Empathy::VERSION.dup}"
+    puts "Empathy Version: #{Empathy::VERSION}"
     
 
 when 'serve', 'server', 's'
@@ -121,7 +121,9 @@ when 'serve', 'server', 's'
 
 when 'console', 'c'
     system "psysh lib/loader.php"
-    # system "php -d auto_prepend_file=lib/loader.php -a"
+
+when 'legacyconsole', 'lc'
+    system "php -d auto_prepend_file=lib/loader.php -a"
 
 else
     puts "Invalid option"

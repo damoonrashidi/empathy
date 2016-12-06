@@ -12,6 +12,9 @@
       $ar = new ArrayManip();
       $this->created_at = date("Y-m-d H:i:s");
       $this->modified_at = date("Y-m-d H:i:s");
+      if ($this->id !== null && $this->id !== "") {
+        return $this->update();
+      }
       $rows = $ar->listify(array_keys($ar->without($this,['id'])));
       $values = $ar->listify(array_values($ar->without($this, ['id'])), "'");
       $q = "INSERT INTO ".static::$table." ($rows) VALUES($values)";
@@ -25,7 +28,7 @@
       else return false;
     }
     /*
-    * Function: where($data = array) -> array
+    * Function: where($data = array, $inclusive = bool) -> array
     * PRE: every key in $data must match a column in the table for this model
     * POST: every object that matches $key = $value. if it's only one object (for instance when runnning where id = 1)
     *       it returns that object as an array, otherwise it returns an array of arrays
@@ -33,9 +36,9 @@
     * EXAMPLE: $UserObject->where(array('email' => 'joe@example.net')) #=> array('id' => 1, 'email' => 'joe@example.net', 'firstname' => 'Joe', 'lastname' => 'Poe', 'age' => 20)
     * Example 2: $UserObject->where(array('age' => '20')); #=> array(array(user1, user2,...))
     */
-    static function where($data){
+    static function where($data, $inclusion = "AND"){
       $set = [];
-      $data = ArrayManip::chain($data, "AND");
+      $data = ArrayManip::chain($data, $inclusion);
       $q = "SELECT * FROM ".static::$table." WHERE ".$data;
       $tstart = microtime(true);
       $result = $GLOBALS['MYSQL']->query($q);
@@ -50,6 +53,7 @@
       }
       return new Resource($set);
     }
+
     /*
     * Function: find($id * int) -> array
     * PRE:
@@ -58,7 +62,7 @@
     * EXAMPLE: $user = $userObject->find(1) //find the first user
     */
 
-    static function find($id){
+    static function find(int $id){
       if(!is_numeric($id)) return null;
       $set = [];
       $q = "SELECT * FROM ".static::$table." WHERE id = $id";
@@ -80,7 +84,7 @@
     * SIDE-EFFECTS: queries the database
     * EXAMPLE: $find = Article::wildcard(['title' => 'Welc']) #=> ArticleObject->['title' => 'welcome to my blog', 'body' => 'stuff here..',...]
     */
-    static function wildcard($data){
+    static function wildcard(array $data){
       $set = [];
       $data = ArrayManip::wildcard($data, '%', '%', 'OR');
       $q = "SELECT * FROM ".static::$table." WHERE ".$data;
@@ -107,7 +111,7 @@
     * EXAMPLE: User::order(['predicate' => ['age'], 'direction' => 'ASC']) #=> [user1, user2, user3, ... ]
     * @params array $parameters
     */
-    static function order($parameters = []){
+    static function order(array $parameters = []){
       $limit = (isset($parameters['limit'])) ? "LIMIT ".$parameters['limit'] : '';
       $offset = (isset($parameters['offset'])) ? "OFFSET ".$parameters['offset'] : '';
       $parameters['predicate'] = ArrayManip::listify($parameters['predicate']);
@@ -137,6 +141,10 @@
       return $update !== false;
     }
 
+    /**
+     * all - all items for this model
+     * @return Resource - all items for this model
+     */
     static function all(){
       $set = [];
       $q = "SELECT * FROM ".static::$table;
@@ -151,13 +159,34 @@
       return new Resource($set);
     }
 
+    /**
+     * [delete - delete the data source for this object in the database]
+     * @return bool - true if the resource was deleted properly, otherwise false
+     */
     function delete(){
       $delete = $GLOBALS['MYSQL']->query("DELETE FROM ".static::$table." WHERE id = ".$this->id);
       return $delete !== false;
     }
 
+    /**
+     * [json - this model as a json object]
+     * @return string
+     */
     function json() {
       return json_encode($this);
+    }
+
+    /**
+     * [validate_presence_of description]
+     * @param  array  $params [description]
+     * @return [type]         [description]
+     */
+    function validate_presence_of(array $params) {
+      foreach($params as $param) {
+        if (empty($this->$param) || $this->$param === "") {
+          throw new Exception("$param is a required field");
+        }
+      }
     }
 
 

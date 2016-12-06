@@ -9,7 +9,19 @@
 		function __after($params,$action){}
 
 		static function respond($array){
-			echo json_encode($array);
+			if (isset($array['success']) && $array['success'] === false && !isset($array['status_code'])) {
+				http_response_code(500);
+			} 
+			else if (isset($array['status_code'])) {
+				header('Content-Type: application/json');
+				http_response_code($array['status_code']);
+				echo json_encode($array);
+			} 
+			else {
+				header('Content-Type: application/json');
+				http_response_code(200);
+				echo json_encode($array);
+			}
 		}
 
 		static function redirect($route){

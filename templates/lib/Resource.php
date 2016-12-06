@@ -34,6 +34,14 @@
       else
         return new Resource(array_slice($this->bucket), 0, $n);
     }
+
+    /**
+    * [count description]
+    * @return [type] [description]
+    */
+    function count() {
+      return count($this->bucket);
+    }
     
     /**
      * map fn -> Resource
@@ -109,6 +117,12 @@
      */
     function to_array() {
       return $this->bucket;
+    }
+
+    function delete() {
+      for($i = 0; $i < count($this->bucket); $i++) {
+        $this->bucket[$i]->delete();
+      }
     }
 
 

@@ -21,7 +21,7 @@ class String
 end
 
 case ARGV[0]
-when 'new'
+when 'new','n'
     root = empathy.instance_variable_get(:@gem_root)
     name = ARGV[1]
     puts "-- Creating directory structure for new project #{name}"
@@ -124,6 +124,17 @@ when 'console', 'c'
 when 'legacyconsole', 'lc'
     system "php -d auto_prepend_file=lib/loader.php -a"
 
+when 'help', 'h'
+	puts "\tUsage $ empathy [option]\n
+	n  new      [dir]         - Creates a new project in new dir
+	g  generate [type] [name] - Generate controller/c or model/m with name
+	d  delete   [type] [name] - Delete controller/c or model/m with name
+	   seed                   - Seed database
+	   migrate                - Migrate database
+	v  version                - Display empathy version
+	s  serve                  - Serve app on localhost:port
+	c  console                - Interactive conosole (psysh)
+	lc legacyconsole          - Interactive console (php -d)\n"
 else
     puts "Invalid option"
 end

@@ -47,7 +47,7 @@ module Empathy
       attributes = fields.map{|f| f.split(':')[0]}
       template.gsub! "%FIELDS%", attributes.map{|f| "'#{f}'"}.join(', ')
       template.gsub! "%THIS%", attributes.map{|f| 
-        "      $this->#{f} = $data['#{f}'];\n"
+        "  public $#{f} = null;\n"
       }.join('')
       File.write("models/#{filename}", template)
       
@@ -58,6 +58,8 @@ module Empathy
           sql += "\t#{f[0]} int PRIMARY KEY NOT NULL AUTO_INCREMENT" if f[2] == 'key'
           sql += "\t#{f[0]} int NOT NULL,\n\tFOREIGN KEY (#{f[0]}) REFERENCES #{f[2]}(id) ON DELETE CASCADE" if f[1] == 'references'
           sql += "\t#{f[0]} #{f[1]} DEFAULT(#{f[3]}" if f[2] == 'default'
+        elsif f[1] == 'string'
+          sql += "\t#{f[0]} varchar(255)"
         else
           sql += "\t#{f[0]} #{f[1]}"
         end

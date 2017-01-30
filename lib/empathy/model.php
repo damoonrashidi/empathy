@@ -7,15 +7,13 @@
 
     //database table for this model
     static $table = %TABLE%;
+    %THIS%
 
     function __construct($data = []) {
-      $options = [%FIELDS%];
-      foreach($options as $key) {
-        $data[$key] = isset($data[$key]) ? $data[$key] : "";
+      foreach($data as $attribute => $override) {
+        $this->$attribute = $override;
       }
 
-%THIS%
-      
       return $this;
     }
 

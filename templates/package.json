@@ -2,8 +2,10 @@
   "author": "My Name",
   "email": "me@mail.com",
   "description": "package description",
+  "main" : "index.js",
   "dependencies": {
   },
   "devDependencies": {
+    
   }
 }

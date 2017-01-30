@@ -42,8 +42,8 @@ when 'new'
     File.write "#{name}/.empathy.yaml", File.read("#{root}lib/empathy/empathy.yaml")
     puts " -- Next steps"
     puts "> cd #{name}/".blue
-    puts "> npm install".blue
-    puts "> gulp".blue
+    puts "> yarn".blue
+    puts "> npm start".blue
 
 when 'generate','g'
     type = ARGV[1]

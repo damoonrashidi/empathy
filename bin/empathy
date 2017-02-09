@@ -95,7 +95,7 @@ when 'seed'
 when 'migrate'
     config = YAML.load_file(".empathy.yaml")
     db = config['db']['development']
-    client = Mysql2::Client.new(:host => db['host'], :username => db['username'], :password => db['password'])
+    client = Mysql2::Client.new(:host => db['host'], :username => db['username'], :password => db['password'], :socket => db['socket'], :port => db['port'])
     begin 
         client.select_db(db['database'])
     rescue Mysql2::Error

@@ -86,7 +86,7 @@ when 'seed'
     else
         config = YAML.load_file(".empathy.yaml")
         db = config['db']['development']
-        client = Mysql2::Client.new(:host => db['host'], :username => db['username'], :password => db['password'])
+        client = Mysql2::Client.new(:host => db['host'], :port => db['port'], :username => db['username'], :password => db['password'])
         client.select_db(db['database'])
         seed = File.read "migrations/seed_#{table}.sql"
         client.query seed

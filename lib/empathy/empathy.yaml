@@ -1,16 +1,19 @@
 db : 
   development : 
     host : "localhost"
+    port: 32770
     password : ""
     username : "root"
-    database : "empathy_dev"
+    database : "project_dev"
   testing :
     host : "localhost"
-    password : "test"
+    port: 32770
+    password : ""
     username : "test"
-    database : "empathy_test"
+    database : "project_test"
   production :
     host : "localhost"
+    port: 32770
     password : "supersecret"
     username : "root"
-    database : "empathy_prod"
+    database : "project_mmr"

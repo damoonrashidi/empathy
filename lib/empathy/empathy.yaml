@@ -1,22 +1,19 @@
 db : 
   development : 
-    host : "localhost"
+    host : "127.0.0.1"
     port: 32770
-    socket: "/var/run/mysqld/mysqld.sock"
     password : ""
     username : "root"
     database : "project_dev"
   testing :
-    host : "localhost"
+    host : "127.0.0.1"
     port: 32770
-    socket: "/var/run/mysqld/mysqld.sock"
     password : ""
     username : "test"
     database : "project_test"
   production :
-    host : "localhost"
+    host : "127.0.0.1"
     port: 32770
-    socket: "/var/run/mysqld/mysqld.sock"
     password : "supersecret"
     username : "root"
     database : "project_mmr"

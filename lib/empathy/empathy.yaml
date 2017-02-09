@@ -4,16 +4,16 @@ db :
     port: 32770
     password : ""
     username : "root"
-    database : "project_dev"
+    database : "empathy_dev"
   testing :
     host : "127.0.0.1"
     port: 32770
     password : ""
     username : "test"
-    database : "project_test"
+    database : "empathy_test"
   production :
     host : "127.0.0.1"
     port: 32770
     password : "supersecret"
     username : "root"
-    database : "project_mmr"
+    database : "empathy_mmr"

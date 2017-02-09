@@ -99,6 +99,8 @@ when 'migrate'
     begin 
         client.select_db(db['database'])
     rescue Mysql2::Error
+        puts "Database #{db['database'].blue} does not exist, creating..."
+        client.select_db(db['database'])
         client.query "CREATE DATABASE IF NOT EXISTS #{db['database']}"
     end
     Dir['migrations/*.sql'].each do |file|

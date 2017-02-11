@@ -1,6 +1,7 @@
 <?php
 
 $conf = Spyc::YAMLLoad(".empathy.yaml");
+$GLOBALS['conf'] = $conf;
 $env = "development";
 
 $GLOBALS["MYSQL"] = mysqli_connect(

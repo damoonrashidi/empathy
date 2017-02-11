@@ -58,7 +58,8 @@ class Router
         if ($url == '' && $this->index != null) {
             if (is_callable($this->index)) {
                 $fn = $this->index;
-                $fn();
+                $result = $fn();
+                echo $result;
                 return;
             } else {
                 $controller = ucfirst(explode('#', $this->index)[0]).'Controller';
@@ -66,9 +67,9 @@ class Router
                 require __DIR__.'/../controllers/'.$controller.'.php';
                 $controller = new $controller();
                 $controller->__before($params, $action);
-                $controller->$action($params);
+                $result = $controller->$action($params);
                 $controller->__after($params, $action);
-
+                echo $result;
                 return;
             }
         }
@@ -82,8 +83,9 @@ class Router
                 require __DIR__.'/../controllers/'.$controller.'.php';
                 $controller = new $controller();
                 $controller->__before($params, $action);
-                $controller->$action($params);
+                $result = $controller->$action($params);
                 $controller->__after($params, $action);
+                echo $result;
                 return;
             }
         } else {
@@ -113,8 +115,10 @@ class Router
                             $params = (object)$params;
                             $controller = new $controller();
                             $controller->__before($params, $action);
-                            $controller->$action($params);
+                            $result = $controller->$action($params);
                             $controller->__after($params, $action);
+
+                            echo $result;
 
                             return;
                         }

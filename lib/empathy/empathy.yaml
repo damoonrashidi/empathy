@@ -17,3 +17,4 @@ db :
     password : "supersecret"
     username : "root"
     database : "empathy_mmr"
+secret_key: my_super_secret_string

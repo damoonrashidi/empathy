@@ -6,6 +6,7 @@ class Router {
     $this->post = [];
     $this->put = [];
     $this->delete = [];
+    $this->options = [];
     $this->uri = $_SERVER['REQUEST_URI'];
     $this->method = $_SERVER['REQUEST_METHOD'];
   }
@@ -35,6 +36,10 @@ class Router {
     $this->delete[$url] = $controller;
   }
 
+  public function options($url, $controller) {
+    $this->options[$url] = $controller;
+  }
+
   public function unifyParams() {
     $params = $_POST;
     $params = array_merge($_GET, $params);
@@ -43,7 +48,15 @@ class Router {
   }
 
   public function run() {
-    $routes = ['GET' => $this->get, 'POST' => $this->post, 'DELETE' => $this->delete, 'PUT' => $this->put][$this->method];
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: $this->method, Authorization, Content-Type");
+
+    $routes = [
+      'GET' => $this->get,
+      'POST' => $this->post,
+      'DELETE' => $this->delete,
+      'PUT' => $this->put,
+      'OPTIONS' => array_merge($this->get, $this->post, $this->delete, $this->put)][$this->method];
     $url = substr($this->uri, 1);
     //this is the index. do the index action
     $params = $this->unifyParams();
@@ -118,8 +131,8 @@ class Router {
         }
       }
       //redirect to 404 if there is 404, otherwise output standard 404
-      header('HTTP/2.0 404 Not Found');
-      echo "<h1>404!</h1><p>Sorry, We couldn't get this resource for you</p>";
+      // header('HTTP/2.0 404 Not Found');
+      // echo "<h1>404!</h1><p>Sorry, We couldn't get this resource for you</p>";
     }
   }
 }

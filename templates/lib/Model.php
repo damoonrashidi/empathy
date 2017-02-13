@@ -62,7 +62,7 @@ abstract class Model {
       array_push($set, $obj);
     }
     if (count($set) == 0) {
-      return null;
+      return new Resource([]);
     }
     return new Resource($set);
   }
